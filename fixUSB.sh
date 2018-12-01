@@ -193,6 +193,7 @@ function _createUSB_Sleep_Script()
     echo '#'
     echo 'gMountPartition="/tmp/com.syscl.externalfix"'
     echo 'gDisk=($(diskutil list |grep -i -i "dev" |grep -i -o "disk[0-9]"))'
+    echo 'gUSBDisk=""'
     echo ''
     echo 'for ((i=0; i<${#gDisk[@]}; ++i))'
     echo 'do'
@@ -212,10 +213,11 @@ function _createUSB_Sleep_Script()
     echo '      if [ -z ${is_SDCard} ]; then'
     echo '          diskutil eject ${gDisk[i]}'
     echo '      else'
-    echo '          diskutil unmountDisk ${gDisk[i]}'
+    echo '          gUSBDisk="${gUSBDisk}\n${gDisk[i]}"'
     echo '      fi'
     echo '  fi'
     echo 'done'
+    echo 'echo -e "${gUSBDisk}\n" | xargs -I {} diskutil eject {}'
     echo ''
     # no wlan kext found
     if [ -z $gRTWlan_kext ]; then
